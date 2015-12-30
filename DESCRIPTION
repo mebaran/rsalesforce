@@ -1,14 +1,13 @@
 Package: rsalesforce
 Type: Package
-Title: What the Package Does (Title Case)
+Title: REST Bindings to Salesforce API
 Version: 0.1
 Date: 2015-12-29
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
+Author: Mark Baran
+Maintainer: Mark Baran <mark@gofastpay.com>
+Description: Library to access Salesforce API via its modern REST interface.  May be cross applicable to general Force.com database access as well.
+License: MIT + file LICENSE
 LazyData: TRUE
-Depends:
-    httr,
-    dplyr
+Depends: httr
+Imports: dplyr
 RoxygenNote: 5.0.1
