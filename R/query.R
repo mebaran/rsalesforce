@@ -62,7 +62,8 @@ frame.records <- function(res) {
   }
   recfr <- parse.records(res$records)
   attr(recfr, "nextRecordsUrl") <- res$nextRecordsUrl
-  recfr
+  blanks <- unlist(lapply(recfr, function(col) any(!is.na(col))))
+  recfr[blanks]
 }
 
 #' Execute a SOQL query
@@ -106,4 +107,34 @@ queryAll <- function(token, soql, limit=10000, ...) {
     results <- rbind(results, queryMore(token, next.url, ...))
   }
   results
+}
+
+#' Describe schema of SObject
+#'
+#' @param token Token returned by login
+#' @param sobject.name Sobject class name (ends in __c for custom objects)
+#' @param describe.full Flag whether to fetch extended detail (including recently updated items)
+#'
+#' @export
+describeSObject <- function(token, sobject.name, describe.full=F) {
+  describe.path <- if(describe.full) {
+    paste('sobjects', sobject.name, sep='/')
+  } else {
+    paste('sobjects', sobject.name, 'describe', sep='/')
+  }
+  api.request(token, 'GET', describe.path)
+}
+
+#' Retrieve SObject by ID
+#'
+#' @param token Token returned by login
+#' @param sobject.name Sobject class name (ends in __c for custom objects)
+#' @param describe.full Flag whether to fetch extended detail (including recently updated items)
+#'
+#' @export
+lookupSObjectID <- function(token, sobject.name, id, external.field=NULL) {
+  api.request(token, 'GET', do.call(paste, as.list(c('sobjects',
+                                                     sobject.name,
+                                                     external.field,
+                                                     id, sep='/'))))
 }
