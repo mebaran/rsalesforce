@@ -13,7 +13,7 @@ query(token, soql, ..., raw = F)
 
 \item{...}{Further arguments passed to api.request}
 
-\item{raw}{Flag whether or not to post-process results into a data.frame, otherwise return raw response}
+\item{raw}{Flag whether or not to post-process results into a data.frame, otherwise return raw response.}
 }
 \description{
 Execute a SOQL query

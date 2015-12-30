@@ -49,9 +49,20 @@ api.request <- function(token, method = c('GET', 'POST', 'PUT', 'DELETE'),
 }
 
 frame.records <- function(res) {
-  recfr <- bind_rows(Map(as.data.frame, res$records))
+  parse.records <- function(records) {
+    bind_rows(lapply(records, function(rec) {
+      rec[names(rec) != 'attributes'] %>%
+        lapply(function(e) {
+          if(is.null(e)) NA
+          else if(is.list(e)) parse.records(e$records)
+          else e
+        }) %>%
+        data.frame(stringsAsFactors=F)
+    }))
+  }
+  recfr <- parse.records(res$records)
   attr(recfr, "nextRecordsUrl") <- res$nextRecordsUrl
-  select(recfr, -starts_with("attributes."))
+  recfr
 }
 
 #' Execute a SOQL query

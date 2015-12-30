@@ -2,7 +2,7 @@
 % Please edit documentation in R/query.R
 \name{queryAll}
 \alias{queryAll}
-\title{High level method automatically page through SOQL query responses}
+\title{High level method automatically page through SOQL query responses, combining query and queryMore}
 \usage{
 queryAll(token, soql, limit = 10000, ...)
 }
@@ -16,6 +16,6 @@ queryAll(token, soql, limit = 10000, ...)
 \item{...}{Further arguments (generally simply passed through to api.request)}
 }
 \description{
-High level method automatically page through SOQL query responses
+High level method automatically page through SOQL query responses, combining query and queryMore
 }
 
