@@ -2,37 +2,7 @@
 #' @import dplyr
 
 NULL
-
-#' Retrieve authentication token based on login
-#'
-#' @param clientid App client ID
-#' @param clientsecret App client secret
-#' @param username Salesforce username
-#' @param password Salesforce password
-#' @param security.token Added security token, concatenated to the password
-#' @param api.version Version of API to use
-#' @param ... Further arguments are passed to httr::POST
-#'
-#' @return Authentication token used in subsequent API requests
-#'
-#' @export
-password.login <- function(clientid, clientsecret,
-                           username, password, security.token="",
-                           api.version = '35.0', ..., raw=T) {
-  resp <- POST("https://login.salesforce.com/services/oauth2/token",
-       accept_json(), ...,
-       encode="form",
-       body=list(
-         grant_type="password",
-         client_id=clientid,
-         client_secret=clientsecret,
-         username=username,
-         password=paste0(password, security.token))) %T>%
-    stop_for_status %>%
-    content %>%
-    c(api.version=api.version)
-}
-
+#' Private method for building Salesforce requests from tokens
 api.request <- function(token, method = c('GET', 'POST', 'PUT', 'DELETE'),
                         path, ...,
                         path.prefix = sprintf('/services/data/v%s/', token$api.version), raw=F) {
@@ -48,6 +18,7 @@ api.request <- function(token, method = c('GET', 'POST', 'PUT', 'DELETE'),
   }
 }
 
+#' Utility to transform the results of query and queryMore to data.frames
 frame.records <- function(res) {
   parse.records <- function(records) {
     bind_rows(lapply(records, function(rec) {
@@ -129,7 +100,8 @@ describeSObject <- function(token, sobject.name, describe.full=F) {
 #'
 #' @param token Token returned by login
 #' @param sobject.name Sobject class name (ends in __c for custom objects)
-#' @param describe.full Flag whether to fetch extended detail (including recently updated items)
+#' @param id ID of sobject to be queried
+#' @param external.field if not NULL, name of column for lookup (which must be an External ID)
 #'
 #' @export
 lookupSObjectID <- function(token, sobject.name, id, external.field=NULL) {

@@ -11,7 +11,9 @@ lookupSObjectID(token, sobject.name, id, external.field = NULL)
 
 \item{sobject.name}{Sobject class name (ends in __c for custom objects)}
 
-\item{describe.full}{Flag whether to fetch extended detail (including recently updated items)}
+\item{id}{ID of sobject to be queried}
+
+\item{external.field}{if not NULL, name of column for lookup (which must be an External ID)}
 }
 \description{
 Retrieve SObject by ID
